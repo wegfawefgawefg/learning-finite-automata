@@ -49,7 +49,7 @@ def find_terminal_states(graph):
     terminal_states = []
     for state, actions in graph:
         terminal = True
-        for action, next_state in actions:
+        for _, next_state in actions:
             if next_state != state:
                 terminal = False
                 break
