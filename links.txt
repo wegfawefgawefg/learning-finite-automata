@@ -1,0 +1,7 @@
+https://www.cs.cornell.edu/courses/cs211/2006sp/Sections/S3/grammars.html
+https://web.stanford.edu/class/archive/cs/cs103/cs103.1164/lectures/18/Small18.pdf
+https://tratt.net/laurie/blog/2011/parsing_the_solved_problem_that_isnt.html
+https://www.youtube.com/results?search_query=stanford+cfg
+https://www.youtube.com/watch?v=Z6dbMNCCNKI&list=PLEAYkSg4uSQ33jY4raAXvUT7Bm_S_EGu0
+https://ocw.mit.edu/courses/18-404j-theory-of-computation-fall-2020/resources/pushdown-automata-cfg-2194-pda/
+http://web.mit.edu/6.031/www/fa19/classes/17-regex-grammars/
