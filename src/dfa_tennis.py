@@ -1,4 +1,7 @@
 """
+DFA:
+    Deterministic finite automata
+
 state generator
     generate graph from fewer information than the graph itself
 
@@ -12,9 +15,38 @@ graph analyzer
     - is a graph complete, inescapable, 
     - identify terminal states
 
+graph predictor / optimizer
+    - develop shortcuts by hashed chains for knowing if a path is possible
+    - programs become compresseds
+
+the set of strings accepted by an automaton is a regular language
+valid programs are strings which lead from the start state to a terminal state
+ 
+if the graph is an automaton, lets call A
+L(A) is the set of strings accepted by A, or the language of A
+
+there may be no terminal states
+
+final states seem to have to be apriori explicitly defined. 
+while terminal states can be discovered, a final state is a given property, not emergent
+a state can be final without being terminal. and a terminal state may not be final
+
+are all multi state automata reducible to a single state automata?
+are some automata reversible?f
+    - is that just a matter of arranging the states such that they contain a history of the previous state?
+    - so all history preserving graphs must be a certain size above the non history preserving graph
+
+automata that generate graphs, and can do appending, should be able to count to arbitrary numbers
+as long as we do add on only, not remove, we shouldnt invalidate the graph
+
+forward states are not terminal, but are one way. no other states ahead of them can lead back to them.
+
+
 """
 
 from typing import Tuple
+
+from common import state_size
 
 
 tennis_start = "love"
@@ -81,6 +113,17 @@ def find_unreachable_states(graph, starting_states):
     return unreachable_states
 
 
+def get_dimensionality(graph):
+    num_states = len(graph)
+    num_branches = 0
+    for state, action_next_state_pairs in graph:
+        for action, next_state in action_next_state_pairs:
+            if next_state != state:
+                num_branches += 1
+
+    return num_branches / num_states
+
+
 # ts = find_terminal_states(tennis)
 # print(ts)
 
@@ -100,15 +143,13 @@ def find(entry, list):
     return None
 
 
-def execute_program(actions, graph, starting_state) -> Tuple[str, int] | Exception:
+def execute_program(
+    actions, graph, starting_state, final_states
+) -> Tuple[bool, str, int] | Exception:
     current_state = starting_state
     steps = 0
-    terminal_states = find_terminal_states(graph)
 
     for action in actions:
-        if current_state in terminal_states:
-            return current_state, steps
-
         sans = find(current_state, graph)
         if sans is None:
             raise InvalidState(f"State {current_state} is not in the graph")
@@ -125,10 +166,10 @@ def execute_program(actions, graph, starting_state) -> Tuple[str, int] | Excepti
 
         steps += 1
 
-    return current_state, steps
+    valid = current_state in final_states
+    return valid, current_state, steps
 
 
-program = "sosososososs"
 unreachable_states = find_unreachable_states(
     tennis,
     # [],
@@ -136,5 +177,12 @@ unreachable_states = find_unreachable_states(
 )
 print(f"Unreachable States: {unreachable_states}")
 
-result = execute_program(program, tennis, tennis_start)
-print(result)
+program = "sosososososs"
+valid, current_state, steps = execute_program(program, tennis, tennis_start, ("game",))
+print(
+    f"Program: {program} is valid: {valid}, current state: {current_state}, steps: {steps}"
+)
+
+# print state size
+print(f"State size: {state_size(tennis)}")
+print(f"Dimensionality: {get_dimensionality(tennis)}")
